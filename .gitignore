@@ -1,0 +1,49 @@
+# ========================
+# GLOBAL IGNORE FOR /sql/*
+# ========================
+
+# Byte-compiled / optimized / DLL files
+sql/**/__pycache__/
+sql/**/*.py[cod]
+sql/**/*.__pycache__*.pyo
+
+# Node.js dependencies (in case front/back use Node)
+sql/**/node_modules/
+
+# Build output
+sql/**/build/
+sql/**/dist/
+sql/**/*.egg-info/
+
+# Logs
+sql/**/*.log
+sql/**/npm-debug.log*
+sql/**/yarn-debug.log*
+sql/**/yarn-error.log*
+sql/**/pnpm-debug.log*
+
+# Runtime files
+sql/**/*.pid
+sql/**/*.seed
+sql/**/*.pid.lock
+
+# Testing/coverage
+sql/**/coverage/
+sql/**/.cache/
+sql/**/.pytest_cache/
+sql/**/.tox/
+
+# Virtual environments
+sql/**/venv/
+sql/**/.env
+sql/**/.env.*
+sql/**/.venv/
+
+# IDE/editor
+sql/**/.vscode/
+sql/**/.idea/
+sql/**/*.swp
+
+# System
+sql/**/.DS_Store
+sql/**/Thumbs.db
