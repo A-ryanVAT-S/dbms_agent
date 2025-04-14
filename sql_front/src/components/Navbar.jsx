@@ -8,6 +8,7 @@ const Navbar = () => {
   const { logout } = useAuth();
 
   const navItems = [
+    { name: 'Editor', path: '/editor', icon: <LayoutDashboard className="mr-2" /> },
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="mr-2" /> },
     { name: 'Query Translator', path: '/translator', icon: <GitCompare className="mr-2" /> },
     { name: 'Designer', path: '/designer', icon: <TableProperties className="mr-2" /> },

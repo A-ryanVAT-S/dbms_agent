@@ -9,6 +9,7 @@ import sys
 import json
 from translator_model import SQLTranslator
 from optimizer_model import SQLOptimizer
+from sql_executor import SQLExecutor
 
 # Define request models
 class TranslateRequest(BaseModel):
@@ -124,13 +125,70 @@ async def explain(request: ExplainRequest):
         print(f"Error in /explain endpoint: {str(e)}", file=sys.stderr)
         raise HTTPException(status_code=500, detail=f"Explain error: {str(e)}")
 
-# Error handler for specific exceptions
+
+class ExecuteQueryRequest(BaseModel):
+    query: str
+    dbType: str
+    databaseId: Optional[str] = None
+
+# Initialize the SQLExecutor
+sql_executor = SQLExecutor()
+
+# Add this endpoint to main.py
+@app.post("/execute")
+async def execute_query(request: ExecuteQueryRequest):
+    """Endpoint to execute SQL queries"""
+    try:
+        print(f"Execute query request received: {request}")
+        # Extract fields from validated request model
+        query = request.query
+        db_type = request.dbType
+        
+        # Execute the query
+        result = sql_executor.execute_query(query=query, db_type=db_type)
+        
+        # Return the result
+        return {
+            "success": True, 
+            "message": "Query executed successfully",
+            "data": result
+        }
+    
+    except Exception as e:
+        # Log the error
+        print(f"Error in /execute endpoint: {str(e)}", file=sys.stderr)
+
+# Add these imports to main.py
+from sql_executor import SQLExecutor
+
+# Add these endpoints to main.py
+@app.get("/database-structure")
+async def get_database_structure():
+    """Endpoint to get database structure information"""
+    try:
+        # Get database structure from SQLExecutor
+        structure = sql_executor.get_database_structure()
+        
+        # Return the result
+        return {
+            "success": True, 
+            "message": "Database structure retrieved successfully",
+            "data": structure
+        }
+    
+    except Exception as e:
+        # Log the error
+        print(f"Error in /database-structure endpoint: {str(e)}", file=sys.stderr)
+        raise HTTPException(status_code=500, detail=f"Error retrieving database structure: {str(e)}")
+
+#Error handler for specific exceptions
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     return JSONResponse(
         status_code=exc.status_code,
         content={"message": exc.detail},
     )
+
 
 if __name__ == "__main__":
     # Get port from environment variable or use default

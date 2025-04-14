@@ -7,11 +7,12 @@ import Navbar from './components/Navbar';
 import LoginPage from './pages/loginPage';
 import MonitoringDashboard from './pages/MonitoringDashboard';
 import SqlQueryTranslator from './pages/SqlQueryTranslator';
-import Designer from './pages/Designer';
+import SchemaDesigner from './pages/SchemaDesigner';
 import QueryOptimizer from './pages/QueryOptimizer';
 import QueryDetails from './components/QueryDetails';
 import UserDashboard from './pages/userDashboard';
 import RegisterationPage from './pages/registrationPage';
+import SQLEditor from './pages/SqlEditor';
 
 // Loading component
 const LoadingSpinner = () => (
@@ -96,7 +97,7 @@ function AppRoutes() {
             <div>
               <Navbar />
               <div className="container mx-auto px-4 py-8">
-                <Designer />
+                <SchemaDesigner />
               </div>
             </div>
           </ProtectedRoute>
@@ -119,6 +120,16 @@ function AppRoutes() {
               <Navbar />
               <div className="container mx-auto px-4 py-8">
                 <QueryDetails />
+              </div>
+            </div>
+          </ProtectedRoute>
+        } />
+        <Route path="/editor" element={
+          <ProtectedRoute>
+            <div>
+              <Navbar />
+              <div className="container mx-auto px-4 py-8">
+                <SQLEditor />
               </div>
             </div>
           </ProtectedRoute>

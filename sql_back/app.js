@@ -46,6 +46,8 @@ app.use('/api/auth', require('./routes/authentication.routes'));
 app.use('/api/optimizer', authenticateToken, require('./routes/optimizer.routes'));
 app.use('/api/translator', authenticateToken, require('./routes/translator.routes'));
 app.use('/api/designer', authenticateToken, require('./routes/designer.routes'));
+// Add this line to your existing app.js with the other route imports
+app.use('/api/sqlEditor', authenticateToken, require('./routes/sqlEditor.routes'));
 
 // --- Utility Routes ---
 
