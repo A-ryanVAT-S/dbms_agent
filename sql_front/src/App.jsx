@@ -12,7 +12,7 @@ import QueryOptimizer from './pages/QueryOptimizer';
 import QueryDetails from './components/QueryDetails';
 import UserDashboard from './pages/userDashboard';
 import RegisterationPage from './pages/registrationPage';
-import SQLEditor from './pages/SqlEditor';
+import SQLEditor from './pages/sqlEditor';
 
 // Loading component
 const LoadingSpinner = () => (

@@ -1,16 +1,121 @@
-
-
 // pages/SchemaDesigner.jsx
 import { useState } from 'react';
 import { FileText, Database, Upload } from 'lucide-react';
+import axios from 'axios';
 
 // Import our components
 import TextBasedGenerator from '../components/TextBasedGenerator';
 import SqlQueryTool from '../components/SqlQueryTool';
 import DocumentExtractor from '../components/DocumentExtractor';
 
+// Base API URL
+const API_BASE_URL = 'http://localhost:5000/api';
+
+// API functions now integrated in the page component
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return {
+    'Authorization': token ? `Bearer ${token}` : '',
+    'Content-Type': 'application/json',
+  };
+};
+
 const SchemaDesigner = () => {
   const [activeTab, setActiveTab] = useState('text-generator');
+
+  // API functions to pass to components
+  const apiHandlers = {
+    extractSchemaFromDocument: async (file) => {
+      try {
+        const formData = new FormData();
+        formData.append('schemaDocument', file);
+        
+        const headers = {
+          ...getAuthHeaders(),
+          'Content-Type': 'multipart/form-data',
+        };
+        
+        const response = await axios.post(
+          `${API_BASE_URL}/designer/extract-schema`,
+          formData,
+          { headers }
+        );
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error extracting schema from document:', error);
+        throw error;
+      }
+    },
+    
+    generateSchemaFromDescription: async (description) => {
+      try {
+        const headers = getAuthHeaders();
+        
+        const response = await axios.post(
+          `${API_BASE_URL}/designer/generate-schema`,
+          { description },
+          { headers }
+        );
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error generating schema from description:', error);
+        throw error;
+      }
+    },
+    
+    executeSchemaQuery: async (query) => {
+      try {
+        const headers = getAuthHeaders();
+        
+        const response = await axios.post(
+          `${API_BASE_URL}/designer/execute-schema`,
+          { query },
+          { headers }
+        );
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error executing schema query:', error);
+        throw error;
+      }
+    },
+    
+    executeCrudQuery: async (query) => {
+      try {
+        const headers = getAuthHeaders();
+        
+        const response = await axios.post(
+          `${API_BASE_URL}/designer/execute-crud`,
+          { query },
+          { headers }
+        );
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error executing CRUD query:', error);
+        throw error;
+      }
+    },
+    
+    processNaturalLanguageQuery: async (query) => {
+      try {
+        const headers = getAuthHeaders();
+        
+        const response = await axios.post(
+          `${API_BASE_URL}/designer/natural-language-query`,
+          { query },
+          { headers }
+        );
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error processing natural language query:', error);
+        throw error;
+      }
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-900 min-h-screen">
@@ -40,9 +145,15 @@ const SchemaDesigner = () => {
         </button>
       </div>
       
-      {activeTab === 'text-generator' && <TextBasedGenerator />}
-      {activeTab === 'sql-tool' && <SqlQueryTool />}
-      {activeTab === 'doc-extractor' && <DocumentExtractor />}
+      {activeTab === 'text-generator' && <TextBasedGenerator apiHandler={apiHandlers.generateSchemaFromDescription} />}
+      {activeTab === 'sql-tool' && 
+        <SqlQueryTool 
+          schemaHandler={apiHandlers.executeSchemaQuery}
+          crudHandler={apiHandlers.executeCrudQuery}
+          nlHandler={apiHandlers.processNaturalLanguageQuery}
+        />
+      }
+      {activeTab === 'doc-extractor' && <DocumentExtractor apiHandler={apiHandlers.extractSchemaFromDocument} />}
     </div>
   );
 };

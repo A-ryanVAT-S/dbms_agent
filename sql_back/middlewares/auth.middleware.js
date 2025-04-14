@@ -5,10 +5,8 @@ const User = require('../models/user.model');
 const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
-    console.log('Auth header:', authHeader); // Check the header format
     
     const token = authHeader && authHeader.split(' ')[1];
-    console.log('Token extracted:', token ? token.substring(0, 10) + '...' : 'none'); // Log part of the token
     
     if (!token) {
       return res.status(401).json({ success: false, message: 'Authentication token is required' });
@@ -16,7 +14,6 @@ const authenticateToken = async (req, res, next) => {
     
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log('Token decoded:', decoded); // Check decoded contents
       
       const user = await User.findById(decoded.userId);
       console.log('User found:', user ? 'yes' : 'no'); // Check if user was found
